@@ -1,0 +1,24 @@
+{
+  "name": "byob",
+  "version": "1.0.0",
+  "description": "",
+  "main": "knexfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JorgeEdPerezGa/byob.git"
+  },
+  "author": "Jorge Ed PerezGa <perezga@icloud>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JorgeEdPerezGa/byob/issues"
+  },
+  "homepage": "https://github.com/JorgeEdPerezGa/byob#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3"
+  }
+}
