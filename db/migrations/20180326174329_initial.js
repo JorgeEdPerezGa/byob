@@ -4,26 +4,23 @@ exports.up = function(knex, Promise) {
     knex.schema.createTable('counties', function(table) {
       table.increments('id').primary();
       table.string('name');
-      table.timestamps(true, true);
+      table.string('county_pop_2015');
+      table.string('county_area');
     }),
     knex.schema.createTable('organisms', function(table) {
       table.increments('id').primary();
-      table.string('scientific-name');
-      table.string('common-name');
-      table.string('taxonomic-group');
-      table.string('federal-extinction');
-    }),
-    knex.schema.createTable('counties_organisms', function(table) {
-      table.increments('id').primary();
-      table.integer('counties_id').references('counties.id');
-      table.integer('organisms_id').references('organisms.id');
+      table.integer('county_id').unsigned()
+        .references('counties.id');
+      table.string('scientific_name');
+      table.string('common_name');
+      table.string('taxonomic_group');
+      table.string('federal_extinction');
     })
   ]);
 };
 
 exports.down = function(knex, Promise) {
   return Promise.all([
-    knex.schema.dropTable('counties_organisms');
     knex.schema.dropTable('counties');
     knex.schema.dropTable('organisms');
   ]);
