@@ -3,11 +3,11 @@ const rawData = require('./rawData');
 const cleanSpeciesData = () => {
   return rawData.data.map(species => {
     return {
-      countyName: species[8],
-      taxonomicGroup: species[10],
-      scientificName: species[12],
-      commonName: species[13],
-      fedListing: species[16]
+      name: species[8],
+      taxonomic_group: species[10],
+      scientific_name: species[12],
+      common_name: species[13],
+      federal_extinction: species[16]
     }
   });
 };

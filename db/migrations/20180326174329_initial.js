@@ -21,7 +21,7 @@ exports.up = function(knex, Promise) {
 
 exports.down = function(knex, Promise) {
   return Promise.all([
-    knex.schema.dropTable('counties');
-    knex.schema.dropTable('organisms');
+    knex.schema.dropTable('organisms'),
+    knex.schema.dropTable('counties')
   ]);
 };

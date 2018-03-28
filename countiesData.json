@@ -1,104 +1,104 @@
-{  
-   "data":[  
-      {  
-         "countyName":"Albany",
-         "countyPopulation2015":"98,268",
-         "landAreami2":"523.45"
+{
+   "data":[
+      {
+         "name":"Albany",
+         "county_pop_2015":"98,268",
+         "county_area":"523.45"
       },
-      {  
-         "countyName":"Cattaraugus",
-         "countyPopulation2015":"77,922",
-         "landAreami2":"1309.85"
+      {
+         "name":"Cattaraugus",
+         "county_pop_2015":"77,922",
+         "county_area":"1309.85"
       },
-      {  
-         "countyName":"Cayuga",
-         "countyPopulation2015":"78,288",
-         "landAreami2":"693.18"
+      {
+         "name":"Cayuga",
+         "county_pop_2015":"78,288",
+         "county_area":"693.18"
       },
-      {  
-         "countyName":"Clinton",
-         "countyPopulation2015":"232,500",
-         "landAreami2":"1038.95"
+      {
+         "name":"Clinton",
+         "county_pop_2015":"232,500",
+         "county_area":"1038.95"
       },
-      {  
-         "countyName":"Columbia",
-         "countyPopulation2015":"61,509",
-         "landAreami2":"635.73"
+      {
+         "name":"Columbia",
+         "county_pop_2015":"61,509",
+         "county_area":"635.73"
       },
-      {  
-         "countyName":"Dutchess",
-         "countyPopulation2015":"295,754",
-         "landAreami2":"801.59"
+      {
+         "name":"Dutchess",
+         "county_pop_2015":"295,754",
+         "county_area":"801.59"
       },
-      {  
-         "countyName":"Erie",
-         "countyPopulation2015":"922,578",
-         "landAreami2":"1044.21"
+      {
+         "name":"Erie",
+         "county_pop_2015":"922,578",
+         "county_area":"1044.21"
       },
-      {  
-         "countyName":"Essex",
-         "countyPopulation2015":"38,478",
-         "landAreami2":"1796.80"
+      {
+         "name":"Essex",
+         "county_pop_2015":"38,478",
+         "county_area":"1796.80"
       },
-      {  
-         "countyName":"Genesee",
-         "countyPopulation2015":"58,937",
-         "landAreami2":"494.11"
+      {
+         "name":"Genesee",
+         "county_pop_2015":"58,937",
+         "county_area":"494.11"
       },
-      {  
-         "countyName":"Jefferson",
-         "countyPopulation2015":"117,635",
-         "landAreami2":"1272.20"
+      {
+         "name":"Jefferson",
+         "county_pop_2015":"117,635",
+         "county_area":"1272.20"
       },
-      {  
-         "countyName":"Monroe",
-         "countyPopulation2015":"749,600",
-         "landAreami2":"659.29"
+      {
+         "name":"Monroe",
+         "county_pop_2015":"749,600",
+         "county_area":"659.29"
       },
-      {  
-         "countyName":"Nassau",
-         "countyPopulation2015":"1.361 million",
-         "landAreasqmi2":"286.69"
+      {
+         "name":"Nassau",
+         "county_pop_2015":"1.361 million",
+         "county_area":"286.69"
       },
-      {  
-         "countyName":"Niagara",
-         "countyPopulation2015":"212,652",
-         "landAreasqmi2":"522.95"
+      {
+         "name":"Niagara",
+         "county_pop_2015":"212,652",
+         "county_area":"522.95"
       },
-      {  
-         "countyName":"Oneida",
-         "countyPopulation2015":"232,500",
-         "landAreasqmi2":"1212.70"
+      {
+         "name":"Oneida",
+         "county_pop_2015":"232,500",
+         "county_area":"1212.70"
       },
-      {  
-         "countyName":"Onondaga",
-         "countyPopulation2015":"468,463",
-         "landAreasqmi2":"780.29"
+      {
+         "name":"Onondaga",
+         "county_pop_2015":"468,463",
+         "county_area":"780.29"
       },
-      {  
-         "countyName":"Orange",
-         "countyPopulation2015":"377,647",
-         "landAreasqmi2":"816.34"
+      {
+         "name":"Orange",
+         "county_pop_2015":"377,647",
+         "county_area":"816.34"
       },
-      {  
-         "countyName":"Oswego",
-         "countyPopulation2015":"17,772",
-         "landAreasqmi2":"953.30"
+      {
+         "name":"Oswego",
+         "county_pop_2015":"17,772",
+         "county_area":"953.30"
       },
-      {  
-         "countyName":"Queens",
-         "countyPopulation2015":"2.339 million",
-         "landAreasqmi2":"108.1"
+      {
+         "name":"Queens",
+         "county_pop_2015":"2.339 million",
+         "county_area":"108.1"
       },
-      {  
-         "countyName":"Rensselaer",
-         "countyPopulation2015":"160,266",
-         "landAreasqmi2":"653.96"
+      {
+         "name":"Rensselaer",
+         "county_pop_2015":"160,266",
+         "county_area":"653.96"
       },
-      {  
-         "countyName":"Richmond",
-         "countyPopulation2015":"109,561",
-         "landAreasqmi2":"58.69"
+      {
+         "name":"Richmond",
+         "county_pop_2015":"109,561",
+         "county_area":"58.69"
       }
    ]
 }
