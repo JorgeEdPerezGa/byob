@@ -5,7 +5,6 @@ const createOrganism = (knex, organism, county) => {
   return knex('counties').where('name', county).first()
   .then((countyRecord) => {
     if(countyRecord) {
-      console.log(countyRecord.id);
       return knex('organisms').insert({
         taxonomic_group: organism.taxonomic_group,
         scientific_name: organism.scientific_name,
