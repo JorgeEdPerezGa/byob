@@ -4,7 +4,7 @@
   "description": "",
   "main": "knexfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test mocha",
     "start": "node server.js"
   },
   "repository": {
@@ -22,5 +22,9 @@
     "express": "^4.16.3",
     "knex": "^0.14.4",
     "pg": "^7.4.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0"
   }
 }
