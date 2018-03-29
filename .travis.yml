@@ -3,7 +3,7 @@ node_js:
 - node
 services:
 - postgresql
-before_scripts:
+before_script:
 - psql -c 'CREATE DATABASE byob_test;' -U postgres
 notifications:
   email: false
