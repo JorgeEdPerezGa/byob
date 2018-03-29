@@ -33,17 +33,25 @@ describe('API Routes', () => {
         response.body.should.be.a('array');
         response.body.length.should.equal(20);
         response.body[0].should.have.property('id');
-        response.body[0].id.should.equal(1);
         response.body[0].should.have.property('common_name');
-        response.body[0].common_name.should.equal('American Toad');
         response.body[0].should.have.property('scientific_name');
-        response.body[0].scientific_name.should.equal('Anaxyrus americanus');
         response.body[0].should.have.property('taxonomic_group');
-        response.body[0].taxonomic_group.should.equal('Amphibians');
         response.body[0].should.have.property('federal_extinction');
-        response.body[0].federal_extinction.should.equal('not listed');
         response.body[0].should.have.property('county_id');
-        response.body[0].county_id.should.equal(2);
+      })
+      .catch(err => {
+        throw err;
+      })
+    })
+
+    it('returns a 404 status if endpoint does not exist', () => {
+      return chai.request(server)
+      .get('/api/v1/ooooooo')
+      .then(response => {
+        response.should.have.status(404)
+      })
+      .catch(err => {
+        throw err;
       })
     })
   })
@@ -70,6 +78,45 @@ describe('API Routes', () => {
         response.body[0].should.have.property('county_id');
         response.body[0].county_id.should.equal(2);
       })
+      .catch(err => {
+        throw err;
+      })
+    })
+
+    it('returns a 404 status if id does not exist', () => {
+      return chai.request(server)
+      .get('/api/v1/organisms/500')
+      .then(response => {
+        response.should.have.status(404);
+      })
+      .catch(err => {
+        throw err;
+      })
+    })
+  })
+
+  describe('POST /api/v1/organisms', () => {
+    it('makes a post and returns the id of organism inserted', () => {
+      return chai.request(server)
+      .post('/api/v1/organisms')
+      .send({
+        common_name: 'White Footed Mouse',
+        scientific_name: 'Peromyscus leucopus',
+        name: 'Neverland',
+        taxonomic_group: 'Mammal',
+        federal_extinction: 'not listed'
+      })
+      .then(response => {
+        response.should.have.status(201);
+        response.body.should.be.a('object');
+        response.body.should.have.property('id');
+        response.body.id.should.equal(41);
+      })
+      .catch(err => {
+        console.log(err)
+        throw err;
+      })
+      
     })
   })
 
