@@ -30,8 +30,8 @@ describe('API Routes', () => {
       .then(response => {
         response.should.have.status(200);
         response.should.be.json;
-        response.should.be.a('array');
-        response.body.length.should.equal(2);
+        response.body.should.be.a('array');
+        response.body.length.should.equal(20);
         response.body[0].should.have.property('id');
         response.body[0].id.should.equal(1);
         response.body[0].should.have.property('common_name');
@@ -43,7 +43,7 @@ describe('API Routes', () => {
         response.body[0].should.have.property('federal_extinction');
         response.body[0].federal_extinction.should.equal('not listed');
         response.body[0].should.have.property('county_id');
-        response.body[0].county_id.should.equal(1);
+        response.body[0].county_id.should.equal(2);
       })
     })
   })
