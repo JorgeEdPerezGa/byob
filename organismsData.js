@@ -1,4 +1,4 @@
-const rawData = require('./rawData');
+const rawData = require('./rawdata.json');
 
 const cleanSpeciesData = () => {
   return rawData.data.map(species => {

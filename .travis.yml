@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+- node
+services:
+- postgresql
+before_scripts:
+- psql -c 'CREATE DATABASE byob_test;' -U postgres
+notifications:
+  email: false
+deploy:
+  provider: heroku
+  api_key:
+    secure: H2Ar6Vq/9gevZoaZ7398dLJriSr/XJQoz0rV8CHhDdyY8M7sKRO8vpKTa3bfZe7zS40QkSN2tGhskG6MM+LuTEehRe3s12uFzQnrfy5Xw3fOt6EGEr10Hjfxyxg+bJMgyX0po8Dl7opYEMVSmcOSHCDhdPuqv/V+NkRijqjh9tNctCDx7/OdabrUuVfzuBXTCm6G2iPDMvXE+eX2eCD7/SCXt1YugRJYcDv0BSgxh1rfj/P38ZZBZNRiKhCqSdf6/krcQ8o21dLKhEq/Spz7jeCOgjVpbnMe2O71wvmrfO7MjjCnEhyJ96iDDXL4vzfnExkJh8yCuE1AB+ykAWHPTJBnt162i2/bEFD+pFhrNEJuY0uQdho14FHIeSa1Vvbs8b0gD1Lbz3KerRolrwR6C7qz47fEUcpKhe2O1FcTEWzp+/YZIPr9mdr8+AzVkjxMuu3x7Cf1QuDLly7Ssb6RS+ubHG/f1IHy4yeWYEapcxBxi6eXkRrOxuai8SYnagctHd9QCdCjyBVzN/xJoWPUJgdRRaPK0kNYOPWBifIUUYijyIHPrjJMKePelTPLdk7yio8wvxTduG3Y4S3tPQIxaWHiDpQZuvUWP3FQdbITiKJYpJtsnucXrMXT21hfjD4eFRynxN7vtwIcXqIaz+Q0LSlzW650uYKGXte76LT1n9E=
+  app: perezga-suliteanu-byob
+  skip_cleanup: true
