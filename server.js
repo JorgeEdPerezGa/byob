@@ -30,7 +30,6 @@ app.get('/api/v1/counties/:id', (request, response) => {
   })
 })
 
-
 app.get('/api/v1/organisms', (request, response) => {
   database('organisms').select().limit(20).offset(0)
     .then(organisms => {
