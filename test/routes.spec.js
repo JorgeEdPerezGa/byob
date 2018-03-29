@@ -48,4 +48,29 @@ describe('API Routes', () => {
     })
   })
 
+  describe('GET /api/v1/organisms/:id', () => {
+    it('should return organism with matching id if it exists in database', () => {
+      return chai.request(server)
+      .get('/api/v1/organisms/8')
+      .then(response => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.be.a('array');
+        response.body.length.should.equal(1);
+        response.body[0].should.have.property('id');
+        response.body[0].id.should.equal(8);
+        response.body[0].should.have.property('common_name');
+        response.body[0].common_name.should.equal('Jefferson Salamander Complex');
+        response.body[0].should.have.property('scientific_name');
+        response.body[0].scientific_name.should.equal('Ambystoma jeffersonianum x laterale');
+        response.body[0].should.have.property('taxonomic_group');
+        response.body[0].taxonomic_group.should.equal('Amphibians');
+        response.body[0].should.have.property('federal_extinction');
+        response.body[0].federal_extinction.should.equal('not listed');
+        response.body[0].should.have.property('county_id');
+        response.body[0].county_id.should.equal(2);
+      })
+    })
+  })
+
 })
