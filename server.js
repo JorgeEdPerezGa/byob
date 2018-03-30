@@ -22,8 +22,8 @@ const checkAuth = (request, response, next) => {
   try {
     const decoded = jwt.verify(request.params.token, app.get('secretKey'));
     const emailInPieces = decoded.body.email.split('@');
-    const approvedEmailBool = 
-      emailInPieces[emailInPieces.length - 1] === 'turing.io' 
+    const approvedEmailBool =
+      emailInPieces[emailInPieces.length - 1] === 'turing.io'
         ? true : false;
     const hasAppName = decoded.body.appName ? true : false;
     if (!hasAppName) {
@@ -61,6 +61,8 @@ app.post('/api/v1/authenticate', (request, response) => {
     .send({token});
 });
 
+app.use(express.static('public'));
+
 app.get('/', (request, response) => {
   response.send('byob');
 });
@@ -79,7 +81,7 @@ app.get('/api/v1/counties/:id', (request, response) => {
     .catch(error => response.status(500).json({error}));
 });
 
-app.post('/api/v1/counties', (request, response) => {
+app.post('/api/v1/counties/:token', checkAuth, async (request, response) => {
   const county = request.body;
   const { name, county_pop_2015, county_area } = county;
 
@@ -99,7 +101,7 @@ app.post('/api/v1/counties', (request, response) => {
 });
 
 app.patch('/api/v1/counties/:id/:token',
-  checkAuth, 
+  checkAuth,
   async (request, response) => {
     const county = request.body;
     const { name, county_pop_2015, county_area } = county;
@@ -109,8 +111,8 @@ app.patch('/api/v1/counties/:id/:token',
         .status(422)
         .send({
           error: `Expected format: {
-          name: <string>, 
-          county_pop_2015: <string>, 
+          name: <string>,
+          county_pop_2015: <string>,
           county_area: <string>
           }`
         });
@@ -120,7 +122,7 @@ app.patch('/api/v1/counties/:id/:token',
     if (!countyDb.length) {
       return response.status(404).send({
         error: 'This county is not in our database'
-      }); 
+      });
     }
 
     database('counties').where('id', id).update(county, 'id')
@@ -132,17 +134,15 @@ app.patch('/api/v1/counties/:id/:token',
       });
   });
 
-// app.delete('/api/v1/counties/:id', (request, response) => {
-//   database('counties').where('id', request.params.id).del()
-//     .then(county => {
-//       if(county) {
-//         return response.sendStatus(200);
-//       } else {
-//         return response.sendStatus(404);
-//       }
-//     })
-//     .catch(error => response.status(500).json({ error: 'county not found' }))
-// })
+app.delete('/api/v1/counties/:id/:token', checkAuth, (request, response) => {
+  database('counties').where('id', request.params.id).del()
+    .then(id => {
+    response.status(204).json(id);
+    })
+    .catch(error => {
+      response.status(500).json(error)
+    })
+})
 
 function* offsetGenerator() {
   yield 0;
@@ -203,7 +203,7 @@ app.post('/api/v1/organisms/:token', checkAuth, async (request, response) => {
     'common_name',
     'scientific_name',
     'name',
-    'taxonomic_group', 
+    'taxonomic_group',
     'federal_extinction'
   ];
   for (let requiredParams of paramsArr) {
@@ -212,17 +212,17 @@ app.post('/api/v1/organisms/:token', checkAuth, async (request, response) => {
         .status(422)
         .send({
           error: `Expected format: {
-            common_name: <string>, 
-            scientific_name: <string>, 
-            name: <string>, taxonomic_group: <string>, 
+            common_name: <string>,
+            scientific_name: <string>,
+            name: <string>, taxonomic_group: <string>,
             federal_extinction: <string>
-          }, 
+          },
           missing parameter: ${requiredParams}`
         });
     }
   }
-  const countyId = await database('counties').where('name', requestBody.name);
-  let insertBody = {...requestBody};
+  const countyId = await database('counties').where('name', requestBody.name)
+  let insertBody = Object.assign({}, requestBody)
   delete insertBody.name;
   insertBody.county_id = countyId[0].id;
 
@@ -245,14 +245,14 @@ app.delete('/api/v1/organisms/:id/:token', checkAuth, (request, response) => {
     });
 });
 
-app.patch('/api/v1/organisms/:id/:token', 
-  checkAuth, 
+app.patch('/api/v1/organisms/:id/:token',
+  checkAuth,
   async (request, response) => {
     const paramsArr = [
-      'common_name', 
-      'scientific_name', 
-      'name', 
-      'taxonomic_group', 
+      'common_name',
+      'scientific_name',
+      'name',
+      'taxonomic_group',
       'federal_extinction'
     ];
     const requestBody = request.body;
@@ -262,12 +262,12 @@ app.patch('/api/v1/organisms/:id/:token',
           .status(422)
           .send({
             error: `Expected format: {
-            common_name: <string>, 
-            scientific_name: <string>, 
-            name: <string>, 
-            taxonomic_group: <string>, 
+            common_name: <string>,
+            scientific_name: <string>,
+            name: <string>,
+            taxonomic_group: <string>,
             federal_extinction: <string>
-          }, 
+          },
           missing parameter: ${requiredParams}`
           });
       }
@@ -278,13 +278,13 @@ app.patch('/api/v1/organisms/:id/:token',
     if (!organismDb.length) {
       return response.status(404).send({
         error: 'This organism is not in our database'
-      }); 
+      });
     }
     const countyId = await database('counties')
       .where('name', requestBody.name)
       .select();
-    let insertBody = {...requestBody};
-  
+    let insertBody = Object.assign({}, requestBody);
+
     delete insertBody.name;
     insertBody.county_id = countyId[0].id;
 
