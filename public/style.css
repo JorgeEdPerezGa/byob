@@ -1,0 +1,71 @@
+body {
+  background: linear-gradient(270deg, #91a73c, #3ca74e, #3ca79e, #3c5fa7);
+  background-size: 800% 800%;
+
+  -webkit-animation: AnimationName 10s ease infinite;
+  -moz-animation: AnimationName 10s ease infinite;
+  animation: AnimationName 10s ease infinite;
+
+  @-webkit-keyframes AnimationName {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+  }
+  @-moz-keyframes AnimationName {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+  }
+  @keyframes AnimationName {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+  }
+}
+
+h1 {
+  background: #ffffff;
+  font-weight: 500;
+  width: min-content;
+  font-size: 20px;
+  font-family: sans-serif;
+  color: #6f6e6e;
+  padding: 15px 60px;
+  margin: 30px 20px 70px auto;
+}
+
+input {
+  border: none;
+  height: 40px;
+  width: 240px;
+  padding-left: 12px;
+  font-size: 20px;
+  margin: 0px 0 20px 0;
+}
+
+button {
+  margin-left: auto;
+  margin-top: 20px;
+  border: none;
+  background: #848484;
+  color: white;
+  height: 40px;
+  width: 120px;
+  font-size: 17px;
+}
+
+button:hover {
+  background: #2f2f2f;
+  color: white;
+  cursor: pointer;
+}
+
+.form-container {
+  box-shadow: 70px 65px #3e3e3e;
+  background: #e2e2e2;
+  padding: 60px;
+  margin: auto;
+  display: flex;
+  width: min-content;
+  flex-wrap: wrap;
+}

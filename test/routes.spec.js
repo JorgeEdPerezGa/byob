@@ -78,10 +78,10 @@ describe('API Routes', () => {
     })
   })
 
-  describe('POST /api/v1/counties', () => {
+  describe('POST /api/v1/counties/:token', () => {
     it('should post a county', () => {
       return chai.request(server)
-      .post('/api/v1/counties')
+      .post('/api/v1/counties/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
       .send({
           name: 'Gennovia',
           county_pop_2015: '58,937',
@@ -162,16 +162,18 @@ describe('API Routes', () => {
     })
   })
 
-
-  // describe('DELETE /api/v1/counties/:id', () => {
-  //   it('should delete a county', () => {
-  //     return chai.request(server)
-  //     .delete('/api/v1/counties/1')
-  //     .then(response => {
-  //       response.should.have.status(200);
-  //     })
-  //   })
-  // })
+  describe('DELETE /api/v1/counties/:id/:token', () => {
+    it('should delete an county with matching id', () => {
+      return chai.request(server)
+      .delete('/api/v1/counties/9/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
+      .then(response => {
+        response.should.have.status(204);
+      })
+      .catch(err => {
+        throw err;
+      })
+    })
+  })
 
   describe('GET /api/v1/organisms', () => {
     it('should return organisms', () => {
@@ -373,7 +375,7 @@ describe('API Routes', () => {
       .catch(err => {
         throw err;
       })
-      
+
     })
 
     it('returns a 422 and descriptive error message if missing parameter in body', () => {
