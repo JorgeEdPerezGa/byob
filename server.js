@@ -154,7 +154,23 @@ function* offsetGenerator() {
 }
 const gen = offsetGenerator();
 
-app.get('/api/v1/organisms', (request, response) => {
+app.get('/api/v1/organisms', async (request, response) => {
+  const { federal_extinction } = request.query;
+
+  if (federal_extinction) {
+    const federalExtinctionParsed = federal_extinction.split('_').join(' ');
+    const fedExtOrgs = await database('organisms')
+      .where('federal_extinction', federalExtinctionParsed)
+      .select();
+    if (fedExtOrgs.length) {
+      return response.status(200).json(fedExtOrgs);
+    } else {
+      return response
+        .status(404)
+        .json(`No organisms have status ${federal_extinction}`);
+    }
+  }
+
   const offset = gen.next().value;
   database('organisms').select().limit(20).offset(offset)
     .then(organisms => {
