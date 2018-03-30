@@ -127,7 +127,7 @@ app.patch('/api/v1/counties/:id/:token',
 
     database('counties').where('id', id).update(county, 'id')
       .then(id => {
-        return response.status(200).json({...county, id: id[0]});
+        return response.status(200).json(Object.assign({}, county, {id: id[0]} ));
       })
       .catch(error => {
         return response.status(500).json({ error });
@@ -290,7 +290,7 @@ app.patch('/api/v1/organisms/:id/:token',
 
     database('organisms').where('id', id).update(insertBody, 'id')
       .then(id => {
-        return response.status(200).json({...insertBody, id: id[0]});
+        return response.status(200).json(Object.assign({}, insertBody, {id: id[0]}));
       })
       .catch(error => {
         return response.status(500).json({ error });

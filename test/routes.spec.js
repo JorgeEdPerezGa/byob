@@ -112,7 +112,6 @@ describe('API Routes', () => {
     })
   })
 
-<<<<<<< HEAD
   describe('PATCH /api/v1/counties/:id/:token', () => {
     it('updates an existing entry and returns patched object and id', () => {
       return chai.request(server)
@@ -156,34 +155,25 @@ describe('API Routes', () => {
       .patch('/api/v1/counties/4/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
       .then(response => {
         response.should.have.status(422)
-=======
-  describe('DELETE /api/v1/counties/:id/:token', () => {
-    it('should delete an county with matching id', () => {
-      return chai.request(server)
-      .delete('/api/v1/counties/9/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
-      .then(response => {
-        response.should.have.status(204);
->>>>>>> delete county requst
       })
       .catch(err => {
         throw err;
       })
     })
   })
-<<<<<<< HEAD
 
-
-  // describe('DELETE /api/v1/counties/:id', () => {
-  //   it('should delete a county', () => {
-  //     return chai.request(server)
-  //     .delete('/api/v1/counties/1')
-  //     .then(response => {
-  //       response.should.have.status(200);
-  //     })
-  //   })
-  // })
-=======
->>>>>>> delete county requst
+  describe('DELETE /api/v1/counties/:id/:token', () => {
+    it('should delete an county with matching id', () => {
+      return chai.request(server)
+      .delete('/api/v1/counties/9/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
+      .then(response => {
+        response.should.have.status(204);
+      })
+      .catch(err => {
+        throw err;
+      })
+    })
+  })
 
   describe('GET /api/v1/organisms', () => {
     it('should return organisms', () => {
