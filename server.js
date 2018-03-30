@@ -75,8 +75,9 @@ app.get('/api/v1/counties', (request, response) => {
 app.get('/api/v1/counties/:id', (request, response) => {
   database('counties').where('id', request.params.id).select()
   .then(county => {
-      return response.status(200).json(county)
+      return response.status(200).json(county);
   })
+  .catch(error => response.status(500))
 })
 
 app.post('/api/v1/counties', (request, response) => {
@@ -120,48 +121,6 @@ function* offsetGenerator() {
 }
 const gen = offsetGenerator();
 
-app.patch('/api/v1/organisms/:id', async (request, response) => {
-  const paramsArr = ['common_name', 'scientific_name', 'name', 'taxonomic_group', 'federal_extinction'];
-  const requestBody = request.body;
-  for (let requiredParams of paramsArr) {
-    if (!requestBody[requiredParams]) {
-      return response
-        .status(422)
-        .send({
-          error: `Expected format: {
-            common_name: <string>, 
-            scientific_name: <string>, 
-            name: <string>, 
-            taxonomic_group: <string>, 
-            federal_extinction: <string>
-          }, 
-          missing parameter: ${requiredParams}`
-        })
-    }
-  }
-  const { id } = request.params;
-  const organismDb = await database('organisms').where('id', id).select();
-
-  if (!organismDb.length) { 
-    return response.status(404).send({
-              error: 'This organism is not in our database'
-            }); 
-  }
-  const countyId = await database('counties').where('name', requestBody.name).select();
-  let insertBody = {...requestBody}
-  
-  delete insertBody.name;
-  insertBody.county_id = countyId[0].id;
-
-  database('organisms').where('id', id).update(insertBody, 'id')
-    .then(id => {
-      return response.status(200).json({...insertBody, id: id[0]})
-    })
-    .catch(error => {
-      return response.status(500).json({ error })
-    });
-});
-
 app.get('/api/v1/organisms', (request, response) => {
   const offset = gen.next().value;
   database('organisms').select().limit(20).offset(offset)
@@ -204,8 +163,8 @@ app.post('/api/v1/organisms/:token', checkAuth, async (request, response) => {
   insertBody.county_id = countyId[0].id;
 
   database('organisms').insert(insertBody, 'id')
-    .then(answer => {
-      return response.status(201).send({ id: answer[0] });
+    .then(id => {
+      return response.status(201).send({ id: id[0] });
     })
     .catch(error => {
       return response.status(500).send({error});
@@ -221,6 +180,48 @@ app.delete('/api/v1/organisms/:id/:token', checkAuth, (request, response) => {
       response.status(500).json(error)
     })
 })
+
+app.patch('/api/v1/organisms/:id/:token', checkAuth, async (request, response) => {
+  const paramsArr = ['common_name', 'scientific_name', 'name', 'taxonomic_group', 'federal_extinction'];
+  const requestBody = request.body;
+  for (let requiredParams of paramsArr) {
+    if (!requestBody[requiredParams]) {
+      return response
+        .status(422)
+        .send({
+          error: `Expected format: {
+            common_name: <string>, 
+            scientific_name: <string>, 
+            name: <string>, 
+            taxonomic_group: <string>, 
+            federal_extinction: <string>
+          }, 
+          missing parameter: ${requiredParams}`
+        })
+    }
+  }
+  const { id } = request.params;
+  const organismDb = await database('organisms').where('id', id).select();
+
+  if (!organismDb.length) {
+    return response.status(404).send({
+              error: 'This organism is not in our database'
+            }); 
+  }
+  const countyId = await database('counties').where('name', requestBody.name).select();
+  let insertBody = {...requestBody}
+  
+  delete insertBody.name;
+  insertBody.county_id = countyId[0].id;
+
+  database('organisms').where('id', id).update(insertBody, 'id')
+    .then(id => {
+      return response.status(200).json({...insertBody, id: id[0]})
+    })
+    .catch(error => {
+      return response.status(500).json({ error })
+    });
+});
 
 app.listen(app.get('port'), () => {
   console.log(`server running on port ${app.get('port')}`)

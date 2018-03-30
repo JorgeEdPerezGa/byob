@@ -188,10 +188,10 @@ describe('API Routes', () => {
     })
   })
 
-  describe('PATCH /api/v1/organisms/:id', () => {
+  describe('PATCH /api/v1/organisms/:id/:token', () => {
     it('updates an existing entry and returns patched object and id', () => {
       return chai.request(server)
-      .patch('/api/v1/organisms/4')
+      .patch('/api/v1/organisms/4/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
       .send({
         common_name: 'White Footed Mouse',
         scientific_name: 'Peromyscus leucopus',
