@@ -307,14 +307,6 @@ describe('API Routes', () => {
       .then(response => {
         response.should.have.status(422);
         response.body.should.have.property('error');
-        response.body.error.should.equal(`Expected format: {
-            common_name: <string>,
-            scientific_name: <string>,
-            name: <string>,
-            taxonomic_group: <string>,
-            federal_extinction: <string>
-          },
-          missing parameter: scientific_name`);
       })
       .catch(error => {
         throw error;
@@ -390,13 +382,6 @@ describe('API Routes', () => {
       .then(response => {
         response.should.have.status(422);
         response.body.should.have.property('error');
-        response.body.error.should.equal(`Expected format: {
-            common_name: <string>,
-            scientific_name: <string>,
-            name: <string>, taxonomic_group: <string>,
-            federal_extinction: <string>
-          },
-          missing parameter: scientific_name`);
       })
       .catch(error => {
         throw error;
