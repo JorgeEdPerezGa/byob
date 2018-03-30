@@ -144,6 +144,31 @@ describe('API Routes', () => {
     })
   })
 
+  describe('PATCH /api/v1/organisms/:id', () => {
+    it('updates an existing entry and returns patched object and id', () => {
+      return chai.request(server)
+      .patch('/api/v1/organisms/4')
+      .send({
+        common_name: 'White Footed Mouse',
+        scientific_name: 'Peromyscus leucopus',
+        name: 'Neverland',
+        taxonomic_group: 'Mammal',
+        federal_extinction: 'not listed'
+      })
+      .then(response => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.be.a('object');
+        response.body.should.have.property('id');
+        response.body.should.have.property('common_name');
+        response.body.should.have.property('scientific_name');
+        response.body.should.have.property('taxonomic_group');
+        response.body.should.have.property('federal_extinction');
+        response.body.should.have.property('county_id');
+      })
+    })
+  })
+
   describe('DELETE /api/v1/organisms/:id/:token', () => {
     it('deletes an organism with matching id', () => {
       return chai.request(server)
