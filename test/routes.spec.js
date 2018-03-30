@@ -78,6 +78,40 @@ describe('API Routes', () => {
     })
   })
 
+  describe('POST /api/v1/counties', () => {
+    it('should post a county', () => {
+      return chai.request(server)
+      .post('/api/v1/counties')
+      .send({
+          name: 'Gennovia',
+          county_pop_2015: '58,937',
+          county_area: '1044.21'
+        })
+      .then(response => {
+        response.should.have.status(201);
+        response.should.be.a('object');
+        response.body[0].should.have.property('name');
+        response.body[0].name.should.equal('Gennovia');
+        response.body[0].should.have.property('county_pop_2015');
+        response.body[0].county_pop_2015.should.equal('58,937');
+        response.body[0].should.have.property('county_area');
+        response.body[0].county_area.should.equal('1044.21');
+        response.body[0].should.have.property('id');
+        response.body[0].id.should.equal(3);
+      })
+    })
+    it('returns a 404 status if endpoint does not exist', () => {
+      return chai.request(server)
+      .get('/api/v1/fake')
+      .then(response => {
+        response.should.have.status(404)
+      })
+      .catch(err => {
+        throw err;
+      })
+    })
+  })
+
   describe('GET /api/v1/organisms', () => {
     it('should return organisms', () => {
       return chai.request(server)

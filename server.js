@@ -31,6 +31,12 @@ app.get('/api/v1/counties/:id', (request, response) => {
 app.post('/api/v1/counties', (request, response) => {
   const county = request.body;
 
+  if(!county.name) {
+    return response
+    .status(422)
+    .send({ error: `missing property.` });
+  }
+
   database('counties').insert(county, '*')
   .then(responseCounty => {
     response.status(201).json(responseCounty)
