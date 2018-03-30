@@ -14,6 +14,13 @@ We chose to build this api in order to make the information a little more organi
 
 ### Obtain Authentication
 
+#### Through the site:
+go to `http://perezga-suliteanu-byob.herokuapp.com`
+
+Enter your app name and email to receive token
+
+#### Through the api:
+
 Make a post request to:
 `/api/v1/authenticate`
 
@@ -42,9 +49,40 @@ A successful response returns the requested county.
 
 ### Post New County
 
+Make a post request to:
+`/api/v1/counties`
+
+In the body include:
+`{
+  name: <county name>,
+  county_pop_2015: <county populatin in 2015>,
+  county_area: <county area in square miles>
+}`
+
+A successful response returns the county's id
+
 ### Delete County
 
+Make a delete request to:
+`/api/v1/counties/:id/:token`
+where :id is the id of the county to be deleted and :token is the JWT received from an authentication post. Only users with proper authorization (see authentication endpoint) can delete.
+
+A successful deletion returns the id of the deleted county.
+
 ### Patch County
+
+Make a patch request to:
+`/api/v1/counties/:id/:token`
+where :id is the id of the county to be updated and :token is the JWT received from an authentication post. Only users with proper authorization (see authentication endpoint) can update.
+
+In the body include:
+`{
+  name: <county name>,
+  county_pop_2015: <county populatin in 2015>,
+  county_area: <county area in square miles>
+}`
+
+A successful deletion returns the id and information of the updated organism.
 
 ### Get all Organisms
 
@@ -67,6 +105,15 @@ Make a post request to:
 `/api/v1/organisms/:token`
 where :token is the JWT received from an authentication post. Only users with proper authorization (see authentication endpoint) can post.
 
+In the body include:
+`{
+  common_name: <string>, 
+  scientific_name: <string>, 
+  name: <string>, 
+  taxonomic_group: <string>, 
+  federal_extinction: <string>
+}`
+
 A successful response returns the id of the posted organism.
 
 ### Delete Organism
@@ -82,6 +129,15 @@ A successful deletion returns the id of the deleted organism.
 Make a patch request to:
 `/api/v1/organisms/:id/:token`
 where :id is the id of the organism to be updated and :token is the JWT received from an authentication post. Only users with proper authorization (see authentication endpoint) can update.
+
+In the body include:
+`{
+  common_name: <string>, 
+  scientific_name: <string>, 
+  name: <string>, 
+  taxonomic_group: <string>, 
+  federal_extinction: <string>
+}`
 
 A successful deletion returns the id and information of the updated organism.
 
