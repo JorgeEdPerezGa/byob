@@ -89,6 +89,19 @@ describe('API Routes', () => {
     })
   })
 
+  describe('DELETE /api/v1/organisms/:id', () => {
+    it('deletes an organism with matching id', () => {
+      return chai.request(server)
+      .delete('/api/v1/organisms/1')
+      .then(response => {
+        response.should.have.status(204);
+      })
+      .catch(err => {
+        throw err;
+      })
+    })
+  })
+
   // describe('POST /api/v1/organisms', () => {
   //   it('makes a post and returns the id of organism inserted', () => {
   //     return chai.request(server)
@@ -110,7 +123,7 @@ describe('API Routes', () => {
   //       console.log(err)
   //       throw err;
   //     })
-  //
+      
   //   })
   // })
 
