@@ -28,6 +28,18 @@ app.get('/api/v1/counties/:id', (request, response) => {
   })
 })
 
+app.post('/api/v1/counties', (request, response) => {
+  const county = request.body;
+
+  database('counties').insert(county, '*')
+  .then(responseCounty => {
+    response.status(201).json(responseCounty)
+  })
+  .catch(error => {
+  response.status(500).json({ error });
+  })
+})
+
 function* offsetGenerator() {
   yield 0;
 
