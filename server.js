@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
@@ -10,6 +11,56 @@ const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
 app.locals.title = 'byob';
+app.set('secretKey', 'disneyprincess');
+
+const checkAuth = (request, response, next) => {
+  if (!request.params.token) {
+    response
+      .status(403)
+      .send({error: 'You must be authorized to hit this endpoint'})
+  }
+  try {
+    const decoded = jwt.verify(request.params.token, app.get('secretKey'));
+    const emailInPieces = decoded.body.email.split('@');
+    const approvedEmailBool = emailInPieces[emailInPieces.length - 1] === 'turing.io' ? true : false;
+    const hasAppName = decoded.body.appName ? true : false;
+    if (!hasAppName) {
+      console.log('has no app name')
+      return response
+              .status(403)
+              .send({ error: 'must have application'});
+    } else if (!approvedEmailBool) {
+      console.log('has no approved email')
+      return response
+              .status(403)
+              .send({ error: 'not authorized to access this endpoint'});
+    } else {
+      console.log('next')
+      next();
+    }
+  } catch (err) {
+    return response
+      .status(403)
+      .send({error: 'invalid token'});
+  }
+}
+
+app.post('/api/v1/authenticate', (request, response, next) => {
+  const { body } = request;
+
+  for(let requiredParameter of ['appName', 'email']) {
+    if(!body[requiredParameter]) {
+      response
+        .status(404)
+        .send({error: `expected ${requiredParameter} in body` })
+    }
+  }
+
+  const token = jwt.sign({ body }, app.get('secretKey'));
+  response
+    .status(201)
+    .send({token})
+})
 
 app.get('/', (request, response) => {
   response.send('byob');
@@ -32,27 +83,53 @@ function* offsetGenerator() {
   yield 0;
 
   let offset = 0;
-  while(offset < 19000) {
+  while (offset < 19000) {
     yield offset += 20;
   }
 }
 const gen = offsetGenerator();
 
-// app.put('/api/v1/organisms?federal_extinction=not_listed', (request, response) => {
-//   console.log('here')
-//   console.log(request.params)
-//   const updateVal = request.params.federal_extinction.replace('_', '-');
-//   database('organisms').where('federal_extinction', request.params.federal_extinction).update('federal_extinction', updateVal)
-//     .then(organism => {
-//       if(organism.length) {
-//         return response.status(200).json({hi: 'it worked kinda'})
-//       } else {
-//         return response.status(404).json({
-//           error: `Could not find organism with id: ${request.params.id}`
-//         })
-//       }
-//     })
-// })
+app.patch('/api/v1/organisms/:id', async (request, response) => {
+  const paramsArr = ['common_name', 'scientific_name', 'name', 'taxonomic_group', 'federal_extinction'];
+  const requestBody = request.body;
+  for (let requiredParams of paramsArr) {
+    if (!requestBody[requiredParams]) {
+      return response
+        .status(422)
+        .send({
+          error: `Expected format: {
+            common_name: <string>, 
+            scientific_name: <string>, 
+            name: <string>, 
+            taxonomic_group: <string>, 
+            federal_extinction: <string>
+          }, 
+          missing parameter: ${requiredParams}`
+        })
+    }
+  }
+  const { id } = request.params;
+  const organismDb = await database('organisms').where('id', id).select();
+
+  if (!organismDb.length) { 
+    return response.status(404).send({
+              error: 'This organism is not in our database'
+            }); 
+  }
+  const countyId = await database('counties').where('name', requestBody.name).select();
+  let insertBody = {...requestBody}
+  
+  delete insertBody.name;
+  insertBody.county_id = countyId[0].id;
+
+  database('organisms').where('id', id).update(insertBody, 'id')
+    .then(id => {
+      return response.status(200).json({...insertBody, id: id[0]})
+    })
+    .catch(error => {
+      return response.status(500).json({ error })
+    });
+});
 
 app.get('/api/v1/organisms', (request, response) => {
   const offset = gen.next().value;
@@ -81,7 +158,7 @@ app.get('/api/v1/organisms/:id', (request, response) => {
   })
 })
 
-app.post('/api/v1/organisms', async (request, response) => {
+app.post('/api/v1/organisms/:token', checkAuth, async (request, response) => {
   const requestBody = request.body
   for (let requiredParams of ['common_name', 'scientific_name', 'name', 'taxonomic_group', 'federal_extinction']) {
     if(!requestBody[requiredParams]) {
@@ -92,7 +169,7 @@ app.post('/api/v1/organisms', async (request, response) => {
   }
   const countyId = await database('counties').where('name', requestBody.name)
   let insertBody = {...requestBody}
-  delete insertBody.name
+  delete insertBody.name;
   insertBody.county_id = countyId[0].id;
 
   database('organisms').insert(insertBody, 'id')
@@ -104,7 +181,7 @@ app.post('/api/v1/organisms', async (request, response) => {
     })
 })
 
-app.delete('/api/v1/organisms/:id', (request, response) => {
+app.delete('/api/v1/organisms/:id/:token', checkAuth, (request, response) => {
   database('organisms').where('id', request.params.id).del()
     .then(id => {
       response.status(204).json(id);
@@ -113,24 +190,6 @@ app.delete('/api/v1/organisms/:id', (request, response) => {
       response.status(500).json(error)
     })
 })
-
-// app.put('/api/v1/organisms?federal_extinction=not_listed', (request, response) => {
-//   console.log('here')
-//   console.log(request.param)
-//   request.param.federal_extinction.replace('_', '-');
-//   database('organisms').where('federal_extinction', request.param.federal_extinction).select()
-//     .then(organism => {
-//       if(organism.length) {
-//         console.log(organism)
-//         return response.status(200).json({hi: 'it worked kinda'})
-//         //use the query param thing to say what to update?
-//       } else {
-//         return response.status(404).json({
-//           error: `Could not find organism with id: ${request.params.id}`
-//         })
-//       }
-//     })
-// })
 
 app.listen(app.get('port'), () => {
   console.log(`server running on port ${app.get('port')}`)

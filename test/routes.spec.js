@@ -144,10 +144,35 @@ describe('API Routes', () => {
     })
   })
 
-  describe('DELETE /api/v1/organisms/:id', () => {
+  describe('PATCH /api/v1/organisms/:id', () => {
+    it('updates an existing entry and returns patched object and id', () => {
+      return chai.request(server)
+      .patch('/api/v1/organisms/4')
+      .send({
+        common_name: 'White Footed Mouse',
+        scientific_name: 'Peromyscus leucopus',
+        name: 'Neverland',
+        taxonomic_group: 'Mammal',
+        federal_extinction: 'not listed'
+      })
+      .then(response => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.be.a('object');
+        response.body.should.have.property('id');
+        response.body.should.have.property('common_name');
+        response.body.should.have.property('scientific_name');
+        response.body.should.have.property('taxonomic_group');
+        response.body.should.have.property('federal_extinction');
+        response.body.should.have.property('county_id');
+      })
+    })
+  })
+
+  describe('DELETE /api/v1/organisms/:id/:token', () => {
     it('deletes an organism with matching id', () => {
       return chai.request(server)
-      .delete('/api/v1/organisms/1')
+      .delete('/api/v1/organisms/1/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
       .then(response => {
         response.should.have.status(204);
       })
@@ -157,29 +182,29 @@ describe('API Routes', () => {
     })
   })
 
-  // describe('POST /api/v1/organisms', () => {
-  //   it('makes a post and returns the id of organism inserted', () => {
-  //     return chai.request(server)
-  //     .post('/api/v1/organisms')
-  //     .send({
-  //       common_name: 'White Footed Mouse',
-  //       scientific_name: 'Peromyscus leucopus',
-  //       name: 'Neverland',
-  //       taxonomic_group: 'Mammal',
-  //       federal_extinction: 'not listed'
-  //     })
-  //     .then(response => {
-  //       response.should.have.status(201);
-  //       response.body.should.be.a('object');
-  //       response.body.should.have.property('id');
-  //       response.body.id.should.equal(41);
-  //     })
-  //     .catch(err => {
-  //       console.log(err)
-  //       throw err;
-  //     })
+  describe('POST /api/v1/organisms/:token', () => {
+    it('makes a post and returns the id of organism inserted', () => {
+      return chai.request(server)
+      .post('/api/v1/organisms/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
+      .send({
+        common_name: 'White Footed Mouse',
+        scientific_name: 'Peromyscus leucopus',
+        name: 'Neverland',
+        taxonomic_group: 'Mammal',
+        federal_extinction: 'not listed'
+      })
+      .then(response => {
+        response.should.have.status(201);
+        response.body.should.be.a('object');
+        response.body.should.have.property('id');
+        response.body.id.should.equal(41);
+      })
+      .catch(err => {
+        console.log(err)
+        throw err;
+      })
       
-  //   })
-  // })
+    })
+  })
 
 })
