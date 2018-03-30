@@ -112,6 +112,16 @@ describe('API Routes', () => {
     })
   })
 
+  // describe('DELETE /api/v1/counties/:id', () => {
+  //   it('should delete a county', () => {
+  //     return chai.request(server)
+  //     .delete('/api/v1/counties/1')
+  //     .then(response => {
+  //       response.should.have.status(200);
+  //     })
+  //   })
+  // })
+
   describe('GET /api/v1/organisms', () => {
     it('should return organisms', () => {
       return chai.request(server)

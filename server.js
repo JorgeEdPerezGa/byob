@@ -30,8 +30,9 @@ app.get('/api/v1/counties/:id', (request, response) => {
 
 app.post('/api/v1/counties', (request, response) => {
   const county = request.body;
+  const { name, county_pop_2015, county_area } = county
 
-  if(!county.name) {
+  if(!name || !county_pop_2015 || !county_area) {
     return response
     .status(422)
     .send({ error: `missing property.` });
@@ -45,6 +46,18 @@ app.post('/api/v1/counties', (request, response) => {
   response.status(500).json({ error });
   })
 })
+
+// app.delete('/api/v1/counties/:id', (request, response) => {
+//   database('counties').where('id', request.params.id).del()
+//     .then(county => {
+//       if(county) {
+//         return response.sendStatus(200);
+//       } else {
+//         return response.sendStatus(404);
+//       }
+//     })
+//     .catch(error => response.status(500).json({ error: 'county not found' }))
+// })
 
 function* offsetGenerator() {
   yield 0;
