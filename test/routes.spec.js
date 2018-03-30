@@ -112,6 +112,57 @@ describe('API Routes', () => {
     })
   })
 
+  describe('PATCH /api/v1/counties/:id/:token', () => {
+    it('updates an existing entry and returns patched object and id', () => {
+      return chai.request(server)
+      .patch('/api/v1/counties/2/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
+      .send({
+        name: 'Westeros',
+        county_pop_2015: '90,000',
+        county_area: '1,000'
+      })
+      .then(response => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.be.a('object');
+        response.body.should.have.property('id');
+        response.body.id.should.equal(2);
+        response.body.should.have.property('name');
+        response.body.name.should.equal('Westeros');
+        response.body.should.have.property('county_pop_2015');
+        response.body.county_pop_2015.should.equal('90,000');
+        response.body.should.have.property('county_area');
+        response.body.county_area.should.equal('1,000');
+      })
+      .catch(error => {
+        throw error;
+      })
+    })
+
+    it('returns a 404 status if endpoint does not exist', () => {
+      return chai.request(server)
+      .patch('/api/v1/counties/5000000000')
+      .then(response => {
+        response.should.have.status(404)
+      })
+      .catch(err => {
+        throw err;
+      })
+    })
+
+    it('returns a 422 body is missing parameters', () => {
+      return chai.request(server)
+      .patch('/api/v1/counties/4/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
+      .then(response => {
+        response.should.have.status(422)
+      })
+      .catch(err => {
+        throw err;
+      })
+    })
+  })
+
+
   // describe('DELETE /api/v1/counties/:id', () => {
   //   it('should delete a county', () => {
   //     return chai.request(server)
@@ -244,7 +295,6 @@ describe('API Routes', () => {
         response.body.id.should.equal(41);
       })
       .catch(err => {
-        console.log(err)
         throw err;
       })
       

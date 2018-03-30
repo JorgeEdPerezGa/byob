@@ -98,6 +98,40 @@ app.post('/api/v1/counties', (request, response) => {
     });
 });
 
+app.patch('/api/v1/counties/:id/:token',
+  checkAuth, 
+  async (request, response) => {
+    const county = request.body;
+    const { name, county_pop_2015, county_area } = county;
+
+    if (!name || !county_pop_2015 || !county_area) {
+      return response
+        .status(422)
+        .send({
+          error: `Expected format: {
+          name: <string>, 
+          county_pop_2015: <string>, 
+          county_area: <string>
+          }`
+        });
+    }
+    const { id } = request.params;
+    const countyDb = await database('counties').where('id', id).select();
+    if (!countyDb.length) {
+      return response.status(404).send({
+        error: 'This county is not in our database'
+      }); 
+    }
+
+    database('counties').where('id', id).update(county, 'id')
+      .then(id => {
+        return response.status(200).json({...county, id: id[0]});
+      })
+      .catch(error => {
+        return response.status(500).json({ error });
+      });
+  });
+
 // app.delete('/api/v1/counties/:id', (request, response) => {
 //   database('counties').where('id', request.params.id).del()
 //     .then(county => {
@@ -198,7 +232,6 @@ app.delete('/api/v1/organisms/:id/:token', checkAuth, (request, response) => {
 app.patch('/api/v1/organisms/:id/:token', 
   checkAuth, 
   async (request, response) => {
-
     const paramsArr = [
       'common_name', 
       'scientific_name', 
@@ -249,6 +282,7 @@ app.patch('/api/v1/organisms/:id/:token',
   });
 
 app.listen(app.get('port'), () => {
+  // eslint-disable-next-line
   console.log(`server running on port ${app.get('port')}`);
 });
 
