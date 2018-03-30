@@ -194,6 +194,33 @@ describe('API Routes', () => {
       })
     })
 
+    it('returns a list of all organisms with matching federal extinction status if sent as a query param', () => {
+      return chai.request(server)
+      .get('/api/v1/organisms?federal_extinction=not_listed')
+      .then(response => {
+        response.should.have.status(200);
+        response.body.should.be.a('array');
+        response.body[0].should.have.property('id');
+        response.body[0].should.have.property('federal_extinction');
+        response.body[0].federal_extinction.should.equal('not listed');
+      })
+      .catch(error => {
+        throw error;
+      })
+    })
+
+    it('returns 404 if query param does not match an extinction status', () => {
+      return chai.request(server)
+      .get('/api/v1/organisms?federal_extinction=killin_it')
+      .then(response => {
+        response.should.have.status(404);
+      })
+      .catch(error => {
+        throw error;
+      })
+
+    })
+
     it('returns a 404 status if endpoint does not exist', () => {
       return chai.request(server)
       .get('/api/v1/ooooooo')
@@ -261,6 +288,55 @@ describe('API Routes', () => {
         response.body.should.have.property('federal_extinction');
         response.body.should.have.property('county_id');
       })
+      .catch(error => {
+        throw error;
+      })
+    })
+
+    it('returns a status 422 if missing a required parameter', () => {
+      return chai.request(server)
+      .patch('/api/v1/organisms/4/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
+      .send({
+        common_name: 'White Footed Mouse',
+        name: 'Neverland',
+        taxonomic_group: 'Mammal',
+        federal_extinction: 'not listed'
+      })
+      .then(response => {
+        response.should.have.status(422);
+        response.body.should.have.property('error');
+        response.body.error.should.equal(`Expected format: {
+            common_name: <string>, 
+            scientific_name: <string>, 
+            name: <string>, 
+            taxonomic_group: <string>, 
+            federal_extinction: <string>
+          }, 
+          missing parameter: scientific_name`);
+      })
+      .catch(error => {
+        throw error;
+      })
+    })
+
+    it('returns a 404 status if organism with matching id does not exist in db', () => {
+      return chai.request(server)
+      .patch('/api/v1/organisms/400000/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
+      .send({
+        common_name: 'White Footed Mouse',
+        scientific_name: 'Peromyscus leucopus',
+        name: 'Neverland',
+        taxonomic_group: 'Mammal',
+        federal_extinction: 'not listed'
+      })
+      .then(response => {
+        response.should.have.status(404);
+        response.body.should.have.property('error');
+        response.body.error.should.equal('This organism is not in our database')
+      })
+      .catch(error => {
+        throw error;
+      })
     })
   })
 
@@ -298,6 +374,31 @@ describe('API Routes', () => {
         throw err;
       })
       
+    })
+
+    it('returns a 422 and descriptive error message if missing parameter in body', () => {
+      return chai.request(server)
+      .post('/api/v1/organisms/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
+      .send({
+        common_name: 'White Footed Mouse',
+        name: 'Neverland',
+        taxonomic_group: 'Mammal',
+        federal_extinction: 'not listed'
+      })
+      .then(response => {
+        response.should.have.status(422);
+        response.body.should.have.property('error');
+        response.body.error.should.equal(`Expected format: {
+            common_name: <string>, 
+            scientific_name: <string>, 
+            name: <string>, taxonomic_group: <string>, 
+            federal_extinction: <string>
+          }, 
+          missing parameter: scientific_name`);
+      })
+      .catch(error => {
+        throw error;
+      })
     })
   })
 
