@@ -23,6 +23,34 @@ describe('API Routes', () => {
     })
   })
 
+  describe('GET /api/v1/counties', () => {
+    it('should return counties', () => {
+      return chai.request(server)
+      .get('/api/v1/counties')
+      .then(response => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.should.be.a('object');
+        response.body.length.should.equal(2);
+        response.body[0].should.have.property('id');
+        response.body[0].should.have.property('name');
+        response.body[0].should.have.property('county_pop_2015');
+        response.body[0].should.have.property('county_area');
+      })
+    })
+
+    it('returns a 404 status if endpoint does not exist', () => {
+      return chai.request(server)
+      .get('/api/v1/fake')
+      .then(response => {
+        response.should.have.status(404)
+      })
+      .catch(err => {
+        throw err;
+      })
+    })
+  })
+
   describe('GET /api/v1/organisms', () => {
     it('should return organisms', () => {
       return chai.request(server)
