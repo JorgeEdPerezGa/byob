@@ -19,6 +19,8 @@ go to `http://perezga-suliteanu-byob.herokuapp.com`
 
 Enter your app name and email to receive token
 
+![Get a token](https://i.imgur.com/h8EJczdm.png)
+
 #### Through the api:
 
 Make a post request to:
