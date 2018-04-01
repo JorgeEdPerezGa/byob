@@ -1,6 +1,8 @@
 # byob - An Api for New York State Biodiversity by County
 
-Jorge PerezGa & Melena Suliteanu
+Jorge Ed PerezGa & Melena Suliteanu
+
+[![Build Status](https://travis-ci.org/JorgeEdPerezGa/byob.svg?branch=master)](https://travis-ci.org/JorgeEdPerezGa/byob)
 
 ## About
 The data for this api came from [this government site](https://catalog.data.gov/dataset/biodiversity-by-county-distribution-of-animals-plants-and-natural-communities/resource/a8f394d7-0193-49b0-b44f-ba911ea1be65)
@@ -109,10 +111,10 @@ where :token is the JWT received from an authentication post. Only users with pr
 
 In the body include:
 `{
-  common_name: <string>, 
-  scientific_name: <string>, 
-  name: <string>, 
-  taxonomic_group: <string>, 
+  common_name: <string>,
+  scientific_name: <string>,
+  name: <string>,
+  taxonomic_group: <string>,
   federal_extinction: <string>
 }`
 
@@ -134,10 +136,10 @@ where :id is the id of the organism to be updated and :token is the JWT received
 
 In the body include:
 `{
-  common_name: <string>, 
-  scientific_name: <string>, 
-  name: <string>, 
-  taxonomic_group: <string>, 
+  common_name: <string>,
+  scientific_name: <string>,
+  name: <string>,
+  taxonomic_group: <string>,
   federal_extinction: <string>
 }`
 
