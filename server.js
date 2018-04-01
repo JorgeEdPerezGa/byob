@@ -127,7 +127,9 @@ app.patch('/api/v1/counties/:id/:token',
 
     database('counties').where('id', id).update(county, 'id')
       .then(id => {
-        return response.status(200).json(Object.assign({}, county, {id: id[0]} ));
+        return response
+          .status(200)
+          .json(Object.assign({}, county, {id: id[0]} ));
       })
       .catch(error => {
         return response.status(500).json({ error });
@@ -137,12 +139,12 @@ app.patch('/api/v1/counties/:id/:token',
 app.delete('/api/v1/counties/:id/:token', checkAuth, (request, response) => {
   database('counties').where('id', request.params.id).del()
     .then(id => {
-    response.status(204).json(id);
+      response.status(204).json(id);
     })
     .catch(error => {
-      response.status(500).json(error)
-    })
-})
+      response.status(500).json(error);
+    });
+});
 
 function* offsetGenerator() {
   yield 0;
@@ -221,8 +223,8 @@ app.post('/api/v1/organisms/:token', checkAuth, async (request, response) => {
         });
     }
   }
-  const countyId = await database('counties').where('name', requestBody.name)
-  let insertBody = Object.assign({}, requestBody)
+  const countyId = await database('counties').where('name', requestBody.name);
+  let insertBody = Object.assign({}, requestBody);
   delete insertBody.name;
   insertBody.county_id = countyId[0].id;
 
@@ -290,10 +292,14 @@ app.patch('/api/v1/organisms/:id/:token',
 
     database('organisms').where('id', id).update(insertBody, 'id')
       .then(id => {
-        return response.status(200).json(Object.assign({}, insertBody, {id: id[0]}));
+        return response
+          .status(200)
+          .json(Object.assign({}, insertBody, {id: id[0]}));
       })
       .catch(error => {
-        return response.status(500).json({ error });
+        return response
+          .status(500)
+          .json({ error });
       });
   });
 

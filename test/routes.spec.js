@@ -23,6 +23,38 @@ describe('API Routes', () => {
     })
   })
 
+  describe('POST /api/v1/authenticate', () => {
+    it('should return a token if request body contains required params', () => {
+      return chai.request(server)
+      .post('/api/v1/authenticate')
+      .send({
+        appName: 'Great app',
+        email: 'email@turing.io'
+      })
+      .then(response => {
+        response.should.have.status(201);
+        response.body.should.have.property('token');
+      })
+      .catch(error => {
+        throw error;
+      })
+    })
+
+    it('should return status 404 if missing parameter in body', () => {
+      return chai.request(server)
+      .post('/api/v1/authenticate')
+      .send({
+        appName: 'Great app',
+      })
+      .then(response => {
+        response.should.have.status(404)
+      })
+      .catch(error => {
+        throw error;
+      })
+    })
+  })
+
   describe('GET /api/v1/counties', () => {
     it('should return counties', () => {
       return chai.request(server)
@@ -36,6 +68,9 @@ describe('API Routes', () => {
         response.body[0].should.have.property('name');
         response.body[0].should.have.property('county_pop_2015');
         response.body[0].should.have.property('county_area');
+      })
+      .catch(error => {
+        throw error;
       })
     })
 
@@ -65,7 +100,11 @@ describe('API Routes', () => {
         response.body[0].should.have.property('county_pop_2015');
         response.body[0].should.have.property('county_area');
       })
+      .catch(error => {
+        throw error;
+      })
     })
+
     it('returns a 404 status if endpoint does not exist', () => {
       return chai.request(server)
       .get('/api/v1/fake')
@@ -83,7 +122,7 @@ describe('API Routes', () => {
       return chai.request(server)
       .post('/api/v1/counties/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
       .send({
-          name: 'Gennovia',
+          name: 'Genovia',
           county_pop_2015: '58,937',
           county_area: '1044.21'
         })
@@ -91,7 +130,7 @@ describe('API Routes', () => {
         response.should.have.status(201);
         response.should.be.a('object');
         response.body[0].should.have.property('name');
-        response.body[0].name.should.equal('Gennovia');
+        response.body[0].name.should.equal('Genovia');
         response.body[0].should.have.property('county_pop_2015');
         response.body[0].county_pop_2015.should.equal('58,937');
         response.body[0].should.have.property('county_area');
@@ -99,15 +138,40 @@ describe('API Routes', () => {
         response.body[0].should.have.property('id');
         response.body[0].id.should.equal(3);
       })
+      .catch(error => {
+        throw error;
+      })
     })
+
     it('returns a 404 status if endpoint does not exist', () => {
       return chai.request(server)
-      .get('/api/v1/fake')
-      .then(response => {
-        response.should.have.status(404)
+      .post('/api/v1/cos/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijp7ImFwcE5hbWUiOiJncmVhdCBhcHAiLCJlbWFpbCI6ImJsYWhAdHVyaW5nLmlvIn0sImlhdCI6MTUyMjM3NjA0Nn0.zK2_ujpj2cpOBHxLpdw9q_wEQcWIsFU2Hyu3xj1gCk0')
+      .send({
+          name: 'Genovia',
+          county_pop_2015: '58,937',
+          county_area: '1044.21'
       })
-      .catch(err => {
-        throw err;
+      .then(response => {
+        response.should.have.status(404);
+      })
+      .catch(error => {
+        throw error;
+      })
+    })
+
+    it('returns a 403 if token is not valid', () => {
+      return chai.request(server)
+      .post('/api/v1/counties/e.k0')
+      .send({
+          name: 'Genovia',
+          county_pop_2015: '58,937',
+          county_area: '1044.21'
+      })
+      .then(response => {
+        response.should.have.status(403);
+      })
+      .catch(error => {
+        throw error
       })
     })
   })
@@ -160,6 +224,22 @@ describe('API Routes', () => {
         throw err;
       })
     })
+
+    it('returns a 403 if token is not valid', () => {
+      return chai.request(server)
+      .patch('/api/v1/counties/1/e.k0')
+      .send({
+          name: 'Genovia',
+          county_pop_2015: '58,937',
+          county_area: '1044.21'
+      })
+      .then(response => {
+        response.should.have.status(403);
+      })
+      .catch(error => {
+        throw error
+      })
+    })
   })
 
   describe('DELETE /api/v1/counties/:id/:token', () => {
@@ -169,8 +249,19 @@ describe('API Routes', () => {
       .then(response => {
         response.should.have.status(204);
       })
-      .catch(err => {
-        throw err;
+      .catch(error => {
+        throw error;
+      })
+    })
+
+    it('returns a 403 if token is not valid', () => {
+      return chai.request(server)
+      .delete('/api/v1/counties/1/e.k0')
+      .then(response => {
+        response.should.have.status(403);
+      })
+      .catch(error => {
+        throw error
       })
     })
   })
@@ -220,7 +311,6 @@ describe('API Routes', () => {
       .catch(error => {
         throw error;
       })
-
     })
 
     it('returns a 404 status if endpoint does not exist', () => {
@@ -332,6 +422,24 @@ describe('API Routes', () => {
         throw error;
       })
     })
+
+    it('returns a 403 if token is not valid', () => {
+      return chai.request(server)
+      .patch('/api/v1/organisms/4/e.k0')
+      .send({
+        common_name: 'White Footed Mouse',
+        scientific_name: 'Peromyscus leucopus',
+        name: 'Neverland',
+        taxonomic_group: 'Mammal',
+        federal_extinction: 'not listed'
+      })
+      .then(response => {
+        response.should.have.status(403);
+      })
+      .catch(error => {
+        throw error
+      })
+    })
   })
 
   describe('DELETE /api/v1/organisms/:id/:token', () => {
@@ -343,6 +451,17 @@ describe('API Routes', () => {
       })
       .catch(err => {
         throw err;
+      })
+    })
+
+    it('returns a 403 if token is not valid', () => {
+      return chai.request(server)
+      .delete('/api/v1/organisms/4/e.k0')
+      .then(response => {
+        response.should.have.status(403);
+      })
+      .catch(error => {
+        throw error;
       })
     })
   })
@@ -387,6 +506,23 @@ describe('API Routes', () => {
         throw error;
       })
     })
-  })
 
+    it('returns a 403 if token is not valid', () => {
+      return chai.request(server)
+      .post('/api/v1/organisms/e.k0')
+      .send({
+        common_name: 'White Footed Mouse',
+        scientific_name: 'Peromyscus leucopus',
+        name: 'Neverland',
+        taxonomic_group: 'Mammal',
+        federal_extinction: 'not listed'
+      })
+      .then(response => {
+        response.should.have.status(403);
+      })
+      .catch(error => {
+        throw error
+      })
+    })
+  })
 })
