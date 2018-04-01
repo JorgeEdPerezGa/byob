@@ -23,6 +23,38 @@ describe('API Routes', () => {
     })
   })
 
+  describe('POST /api/v1/authenticate', () => {
+    it('should return a token if request body contains required params', () => {
+      return chai.request(server)
+      .post('/api/v1/authenticate')
+      .send({
+        appName: 'Great app',
+        email: 'email@turing.io'
+      })
+      .then(response => {
+        response.should.have.status(201);
+        response.body.should.have.property('token');
+      })
+      .catch(error => {
+        throw error;
+      })
+    })
+
+    it('should return status 404 if missing parameter in body', () => {
+      return chai.request(server)
+      .post('/api/v1/authenticate')
+      .send({
+        appName: 'Great app',
+      })
+      .then(response => {
+        response.should.have.status(404)
+      })
+      .catch(error => {
+        throw error;
+      })
+    })
+  })
+
   describe('GET /api/v1/counties', () => {
     it('should return counties', () => {
       return chai.request(server)
